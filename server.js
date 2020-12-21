@@ -1,16 +1,29 @@
 const express = require('express');
 const morgan = require('morgan');
+const jwt = require('express-jwt');
+const users = require('./users');
 
 const app = express();
 app.use(morgan('dev'));
 
-app.get('/', (req, res, next) => {
-  const userString = JSON.stringify(req.user);
-  res.send(`
-    <h1>Hello from Express!</h1>
-    <pre>${userString}</pre>
-  `);
-});
+app.use(
+  jwt({
+    secret: 'super-secret-secret',
+    algorithms: ['RS256'],
+    credentialsRequired: false,
+  })
+);
+
+app.use(express.static("."));
+
+// app.get('/', (req, res, next) => {
+//   console.log(req.headers);
+//   const userString = JSON.stringify(req.user);
+//   res.send(`
+//     <h1>Hello from Express!</h1>
+//     <pre>${userString}</pre>
+//   `);
+// });
 
 const PORT = 8080;
 app.listen(PORT, () => {
