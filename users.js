@@ -23,10 +23,14 @@ let nextId =
   }, -1) + 1;
 
 function login(email, password) {
-  for (const user of users) {
+  for (const [id, user] of Object.entries(users)) {
     if (user.email === email) {
       const hashedPassword = SHA256(password).toString();
-      if (user.password === hashedPassword) return user;
+      if (user.passwordHash === hashedPassword)
+        return {
+          id: Number(id),
+          email: user.email,
+        };
       throw new Error('Authentication Failed');
     }
   }
@@ -34,15 +38,18 @@ function login(email, password) {
 }
 
 function findUserById(id) {
-  return users[id];
+  const userWithId = users[id];
+  if (!userWithId) throw new Error(`User With id ${id} Not Found`);
+  const { passwordHash, ...user } = userWithId; // eslint-disable-line no-unused-vars
+  return user;
 }
 
 function findUserByEmail(email) {
   for (const [key, value] of Object.entries(users)) {
     if (email === value.email) {
       return {
-        id: key,
-        ...value,
+        id: Number(key),
+        email: value.email,
       };
     }
   }
@@ -58,7 +65,17 @@ function signup(email, password) {
     passwordHash: SHA256(password).toString(),
   };
   nextId++;
+  return {
+    id: nextId - 1,
+    email: users[nextId - 1].email,
+  };
 }
+
+// console.log('Logged In Successfully!', login('finn@finn.finn', '123'));
+// console.log('Signed Up Successfully!', signup('finn@finn.finn2', '123'));
+// console.log('Found User!', findUserById(4));
+
+console.log(users);
 
 module.exports = {
   login,
