@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Hello Express JWT!</h1>
+    <form id="login">
+      <input type="email" name="email" placeholder="email" />
+      <input type="password" name="password" placeholder="password" />
+      <button type="submit">Log In</button>
+    </form>
+  </body>
+  <script>
+    function getInputValues(formSubmitEvent) {
+      const inputs = Array.from(
+        formSubmitEvent.target.querySelectorAll('input')
+      );
+      return inputs.reduce((acc, el) => {
+        return { ...acc, [el.name]: el.value };
+      }, {});
+    }
+
+    const loginForm = document.getElementById('login');
+    loginForm.addEventListener('submit', async (evt) => {
+      try {
+        evt.preventDefault();
+        const formDataJSON = JSON.stringify(getInputValues(evt));
+        const response = await fetch('/login', {
+          body: formDataJSON,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'POST',
+        });
+        const jsonRes = await response.json();
+        console.log({ jsonRes });
+        // evt.target.querySelectorAll("input")
+      } catch (err) {
+        console.error(err);
+      }
+    });
+  </script>
+</html>

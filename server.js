@@ -5,6 +5,7 @@ const users = require('./users');
 
 const app = express();
 app.use(morgan('dev'));
+app.use(express.json());
 
 app.use(
   jwt({
@@ -14,7 +15,12 @@ app.use(
   })
 );
 
-app.use(express.static("."));
+app.use(express.static("dist"));
+
+app.post("/login", (req, res, next) => {
+  console.log(req.body);
+  res.send({message: 'success!'})
+})
 
 // app.get('/', (req, res, next) => {
 //   console.log(req.headers);
