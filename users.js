@@ -75,7 +75,7 @@ function signup(email, password) {
 // console.log('Signed Up Successfully!', signup('finn@finn.finn2', '123'));
 // console.log('Found User!', findUserById(4));
 
-console.log(users);
+// console.log(users);
 
 module.exports = {
   login,

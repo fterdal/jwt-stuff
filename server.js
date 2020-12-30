@@ -1,7 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const jwt = require('express-jwt');
-const users = require('./users');
+const { login } = require('./users');
 
 const app = express();
 app.use(morgan('dev'));
@@ -15,12 +15,17 @@ app.use(
   })
 );
 
-app.use(express.static("dist"));
+app.use(express.static('dist'));
 
-app.post("/login", (req, res, next) => {
-  console.log(req.body);
-  res.send({message: 'success!'})
-})
+app.post('/login', (req, res, next) => {
+  try {
+    console.log(req.body);
+    const user = login(req.body.email, req.body.password);
+    res.send(user);
+  } catch (err) {
+    next(err);
+  }
+});
 
 // app.get('/', (req, res, next) => {
 //   console.log(req.headers);
